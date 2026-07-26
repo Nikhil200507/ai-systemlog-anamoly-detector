@@ -1,0 +1,6 @@
+{
+  "buildCommand": "cd ai-powered-anamoly-detection && npm run build",
+  "outputDirectory": "ai-powered-anamoly-detection/.next",
+  "framework": "nextjs",
+  "installCommand": "cd ai-powered-anamoly-detection && npm install"
+}

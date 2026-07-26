@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+pandas
+numpy
+faker
+geopy
+scikit-learn
+requests

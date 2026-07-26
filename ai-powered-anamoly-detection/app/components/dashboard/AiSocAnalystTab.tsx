@@ -109,25 +109,6 @@ Select a quick prompt card above or ask any question about the platform metrics!
     if (!queryText) setInputQuery('');
     setIsLoading(true);
 
-    if (!isBackendOnline) {
-      setTimeout(() => {
-        const aiMsg: Message = {
-          id: `ai-${Date.now()}`,
-          sender: 'AI',
-          content: `## ⚠️ FastAPI Backend Offline\n\nPlease launch the FastAPI server on port 8000 to connect to the live Gemini Flash API engine.`,
-          suggestions: [
-            "How is the Explainable Risk Score calculated?",
-            "How does Cold Start work?",
-            "Explain False-Positive Rate"
-          ],
-          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        };
-        setMessages((prev) => [...prev, aiMsg]);
-        setIsLoading(false);
-      }, 500);
-      return;
-    }
-
     try {
       const historyPayload = messages
         .filter((m) => m.id !== 'welcome-msg')
@@ -161,10 +142,33 @@ Select a quick prompt card above or ask any question about the platform metrics!
         };
         setMessages((prev) => [...prev, aiMsg]);
       } else {
-        onShowNotification("AI Analyst request failed.");
+        const errorData = await res.json().catch(() => ({}));
+        const aiMsg: Message = {
+          id: `ai-${Date.now()}`,
+          sender: 'AI',
+          content: errorData.text || `## ⚠️ AI SOC Analyst API Error\n\nUnable to generate AI response from backend.`,
+          suggestions: [
+            "How is the Explainable Risk Score calculated?",
+            "What is Cold Start vs Concept Drift?",
+            "Explain False-Positive Rate"
+          ],
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+        setMessages((prev) => [...prev, aiMsg]);
       }
     } catch (err) {
-      onShowNotification("Network error communicating with AI Analyst.");
+      const aiMsg: Message = {
+        id: `ai-${Date.now()}`,
+        sender: 'AI',
+        content: `## ⚠️ Connection Error\n\nUnable to reach backend at \`${API_BASE_URL}\`. Please verify your connection or backend server.`,
+        suggestions: [
+          "How is the Explainable Risk Score calculated?",
+          "What is Cold Start vs Concept Drift?",
+          "Explain False-Positive Rate"
+        ],
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+      setMessages((prev) => [...prev, aiMsg]);
     } finally {
       setIsLoading(false);
     }

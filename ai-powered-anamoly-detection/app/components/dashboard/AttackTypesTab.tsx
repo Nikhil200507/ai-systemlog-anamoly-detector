@@ -6,6 +6,7 @@ import {
   Zap, CheckCircle2, AlertOctagon, MapPin, Activity, Shield, Cpu, ChevronRight
 } from 'lucide-react';
 import { AccessLog } from '../../types/benzene';
+import { API_BASE_URL } from '../../utils/apiConfig';
 
 interface AttackTypesTabProps {
   logs: AccessLog[];
@@ -32,7 +33,7 @@ export const AttackTypesTab: React.FC<AttackTypesTabProps> = ({
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 2500);
     try {
-      const res = await fetch("http://localhost:8000/api/classified-attacks?limit=50", { signal: controller.signal });
+      const res = await fetch(`${API_BASE_URL}/api/classified-attacks?limit=50`, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (res.ok) {
         const data = await res.json();

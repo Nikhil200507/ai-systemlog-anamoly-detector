@@ -13,6 +13,7 @@ import { SignIn } from './components/SignIn';
 import { SignUp } from './components/SignUp';
 
 import { insforge } from './utils/insforge';
+import { API_BASE_URL } from './utils/apiConfig';
 import { generateInitialLogs, generateInitialAlerts } from './utils/syntheticLogGenerator';
 import { AccessLog, IncidentAlert } from './types/benzene';
 
@@ -109,7 +110,7 @@ export default function Home() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 2500);
       try {
-        const res = await fetch("http://localhost:8000/api/status", { signal: controller.signal });
+        const res = await fetch(`${API_BASE_URL}/api/status`, { signal: controller.signal });
         clearTimeout(timeoutId);
         if (res.ok) {
           const data = await res.json();
@@ -126,7 +127,7 @@ export default function Home() {
 
     const fetchFooterMetrics = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/dashboard-metrics");
+        const res = await fetch(`${API_BASE_URL}/api/dashboard-metrics`);
         if (res.ok) {
           const data = await res.json();
           setFooterMetrics({
@@ -157,7 +158,7 @@ export default function Home() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 2500);
       try {
-        const res = await fetch("http://localhost:8000/api/logs?limit=40", { signal: controller.signal });
+        const res = await fetch(`${API_BASE_URL}/api/logs?limit=40`, { signal: controller.signal });
         clearTimeout(timeoutId);
         if (res.ok) {
           const blogData = await res.json();
@@ -287,7 +288,7 @@ export default function Home() {
 
   const handleToggleGenerator = async () => {
     if (!isBackendOnline) return;
-    const endpoint = isGenerating ? "http://localhost:8000/api/stop" : "http://localhost:8000/api/start";
+    const endpoint = isGenerating ? `${API_BASE_URL}/api/stop` : `${API_BASE_URL}/api/start`;
     try {
       const res = await fetch(endpoint, { method: "POST" });
       if (res.ok) {
@@ -301,7 +302,7 @@ export default function Home() {
   const handleTriggerAttack = async (attackType: string) => {
     if (!isBackendOnline) return;
     try {
-      await fetch("http://localhost:8000/api/trigger-attack", {
+      await fetch(`${API_BASE_URL}/api/trigger-attack`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ attack_type: attackType })

@@ -6,6 +6,7 @@ import {
   RefreshCcw, Zap, MapPin, User, Activity, ShieldAlert, AlertTriangle, Cpu, ChevronRight
 } from 'lucide-react';
 import { AccessLog } from '../../types/benzene';
+import { API_BASE_URL } from '../../utils/apiConfig';
 
 interface FalsePositiveTabProps {
   logs: AccessLog[];
@@ -42,8 +43,8 @@ export const FalsePositiveTab: React.FC<FalsePositiveTabProps> = ({
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 2500);
     try {
-      const res = await fetch("http://localhost:8000/api/false-positives?limit=50", { signal: controller.signal });
-      const metricsRes = await fetch("http://localhost:8000/api/fp-metrics", { signal: controller.signal });
+      const res = await fetch(`${API_BASE_URL}/api/false-positives?limit=50`, { signal: controller.signal });
+      const metricsRes = await fetch(`${API_BASE_URL}/api/fp-metrics`, { signal: controller.signal });
       clearTimeout(timeoutId);
       
       if (res.ok) {
@@ -74,7 +75,7 @@ export const FalsePositiveTab: React.FC<FalsePositiveTabProps> = ({
     setIsSubmitting(true);
     try {
       if (isBackendOnline) {
-        const res = await fetch("http://localhost:8000/api/feedback", {
+        const res = await fetch(`${API_BASE_URL}/api/feedback`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

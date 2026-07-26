@@ -6,6 +6,7 @@ import {
   RefreshCcw, Zap, CheckCircle2, User, Activity, BarChart3, ChevronRight, Scale
 } from 'lucide-react';
 import { AccessLog } from '../../types/benzene';
+import { API_BASE_URL } from '../../utils/apiConfig';
 
 interface RiskScoreTabProps {
   logs: AccessLog[];
@@ -32,7 +33,7 @@ export const RiskScoreTab: React.FC<RiskScoreTabProps> = ({
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 2500);
     try {
-      const res = await fetch("http://localhost:8000/api/risk-scores?limit=50", { signal: controller.signal });
+      const res = await fetch(`${API_BASE_URL}/api/risk-scores?limit=50`, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (res.ok) {
         const data = await res.json();

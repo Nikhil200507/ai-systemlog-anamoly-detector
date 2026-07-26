@@ -11,6 +11,7 @@ import {
   XAxis, YAxis, Tooltip, Legend 
 } from 'recharts';
 import { AccessLog } from '../../types/benzene';
+import { API_BASE_URL, WS_BASE_URL } from '../../utils/apiConfig';
 
 interface RealtimeDashboardTabProps {
   logs: AccessLog[];
@@ -47,8 +48,8 @@ export const RealtimeDashboardTab: React.FC<RealtimeDashboardTabProps> = ({
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 2500);
     try {
-      const res = await fetch("http://localhost:8000/api/dashboard-metrics", { signal: controller.signal });
-      const logsRes = await fetch("http://localhost:8000/api/logs?limit=40", { signal: controller.signal });
+      const res = await fetch(`${API_BASE_URL}/api/dashboard-metrics`, { signal: controller.signal });
+      const logsRes = await fetch(`${API_BASE_URL}/api/logs?limit=40`, { signal: controller.signal });
       clearTimeout(timeoutId);
       
       if (res.ok) {
@@ -64,7 +65,7 @@ export const RealtimeDashboardTab: React.FC<RealtimeDashboardTabProps> = ({
     }
   };
 
-  // Connect to FastAPI WebSocket ws://localhost:8000/ws/stream
+  // Connect to FastAPI WebSocket stream
   useEffect(() => {
     if (!isBackendOnline) return;
 
@@ -72,7 +73,7 @@ export const RealtimeDashboardTab: React.FC<RealtimeDashboardTabProps> = ({
     const interval = setInterval(fetchDashboardMetrics, 4000);
 
     try {
-      const ws = new WebSocket("ws://localhost:8000/ws/stream");
+      const ws = new WebSocket(`${WS_BASE_URL}/ws/stream`);
       wsRef.current = ws;
 
       ws.onopen = () => {
@@ -114,7 +115,7 @@ export const RealtimeDashboardTab: React.FC<RealtimeDashboardTabProps> = ({
     }
     setIsActionLoading(true);
     try {
-      const res = await fetch("http://localhost:8000/api/feedback", {
+      const res = await fetch(`${API_BASE_URL}/api/feedback`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ event_id: eventId, feedback: feedbackType })

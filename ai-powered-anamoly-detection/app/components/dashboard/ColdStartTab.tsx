@@ -6,6 +6,7 @@ import {
   Clock, Award, CheckCircle2, User, Layers, ArrowRight
 } from 'lucide-react';
 import { AccessLog } from '../../types/benzene';
+import { API_BASE_URL } from '../../utils/apiConfig';
 
 interface ColdStartTabProps {
   logs: AccessLog[];
@@ -31,8 +32,8 @@ export const ColdStartTab: React.FC<ColdStartTabProps> = ({
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 2500);
     try {
-      const pRes = await fetch("http://localhost:8000/api/cold-start", { signal: controller.signal });
-      const hRes = await fetch("http://localhost:8000/api/concept-drift", { signal: controller.signal });
+      const pRes = await fetch(`${API_BASE_URL}/api/cold-start`, { signal: controller.signal });
+      const hRes = await fetch(`${API_BASE_URL}/api/concept-drift`, { signal: controller.signal });
       clearTimeout(timeoutId);
       
       if (pRes.ok) {
@@ -65,7 +66,7 @@ export const ColdStartTab: React.FC<ColdStartTabProps> = ({
     }
 
     try {
-      const res = await fetch("http://localhost:8000/api/trigger-drift", {
+      const res = await fetch(`${API_BASE_URL}/api/trigger-drift`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_id: activeUser.user_id, drift_type: driftType })

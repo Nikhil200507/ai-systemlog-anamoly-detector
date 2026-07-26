@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { AccessLog, IncidentAlert, ModelMetrics } from '../types/benzene';
 import { generateRandomLog, getDefaultModelMetrics } from '../utils/syntheticLogGenerator';
+import { API_BASE_URL } from '../utils/apiConfig';
 
 import { ConsoleOverviewTab } from './dashboard/ConsoleOverviewTab';
 import { IncidentTriageTab } from './dashboard/IncidentTriageTab';
@@ -74,7 +75,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
     const fetchLiveMetrics = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/dashboard-metrics");
+        const res = await fetch(`${API_BASE_URL}/api/dashboard-metrics`);
         if (res.ok) {
           const data = await res.json();
           setMetrics(prev => ({
@@ -187,7 +188,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </button>
 
               <a
-                href={isBackendOnline ? "http://localhost:8000/api/export" : "#"}
+                href={isBackendOnline ? `${API_BASE_URL}/api/export` : "#"}
                 onClick={(e) => {
                   if (!isBackendOnline) {
                     e.preventDefault();

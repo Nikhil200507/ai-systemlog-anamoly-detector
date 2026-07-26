@@ -6,6 +6,7 @@ import {
   HelpCircle, BookOpen, Calculator, Compass, Layers, ShieldCheck
 } from 'lucide-react';
 import { AccessLog } from '../../types/benzene';
+import { API_BASE_URL } from '../../utils/apiConfig';
 
 interface Message {
   id: string;
@@ -65,7 +66,7 @@ Select a quick prompt card above or ask any question about the platform metrics!
   const fetchSummaryStats = async () => {
     if (!isBackendOnline) return;
     try {
-      const res = await fetch("http://localhost:8000/api/dashboard-metrics");
+      const res = await fetch(`${API_BASE_URL}/api/dashboard-metrics`);
       if (res.ok) {
         const data = await res.json();
         setSummaryStats({
@@ -135,7 +136,7 @@ Select a quick prompt card above or ask any question about the platform metrics!
           content: m.content
         }));
 
-      const res = await fetch("http://localhost:8000/api/ai-analyst/chat", {
+      const res = await fetch(`${API_BASE_URL}/api/ai-analyst/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

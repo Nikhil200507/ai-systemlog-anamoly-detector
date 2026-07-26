@@ -6,3 +6,4 @@ faker
 geopy
 scikit-learn
 requests
+google-generativeai
